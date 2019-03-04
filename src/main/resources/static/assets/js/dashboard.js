@@ -1,14 +1,29 @@
+function hideSection() {
+    
+    if ($('.home').hasClass('active')){
+        $('#teams').fadeOut();
+    } else if ($('.schedule').hasClass('active')) {
+        $('#dailySchedule').fadeOut();
+    } else if ($('.standings').hasClass('active')) {
+        $('#standings').fadeOut();
+    }
+}
+
 $(".home").click(function () {
+
+    hideSection()
+
     $('.nav li a.active').removeClass('active');
     $(this).addClass('active');
 
-    $('#dailySchedule').fadeOut();
     $('#teams').show();
 })
 
 /**********************************************************************************************************************/
 let stadiums = ""
 $(".schedule").click(function (e) {
+
+    hideSection()
 
     $('#dailySchedule').remove();
 
@@ -22,8 +37,6 @@ $(".schedule").click(function (e) {
     })
 
     $.get("http://localhost:8080/dailyschedule", function (data) {
-
-        $('#teams').fadeOut();
 
         let dailySchedule = $('<div id="dailySchedule"></div>')
 
@@ -73,4 +86,101 @@ $(".schedule").click(function (e) {
 /**********************************************************************************************************************/
 $(".standings").click(function (e) {
 
+    hideSection()
+
+    $('#standings').remove();
+
+    $('.nav li a.active').removeClass('active');
+
+    $(this).addClass('active');
+
+    $.get("http://localhost:8080/standings", function (data) {
+
+        const standings = $('<div id="standings"></div>')
+
+        function generateTable(tableHeadClass, tableName) {
+            const Table = $('<table class="table"></table>')
+            const TableHead = $('<thead></thead>').addClass(tableHeadClass)
+
+            const TableTr = $('<tr></tr>')
+            TableTr.append("<th scope='col'>"+tableName+"</th>")
+            TableTr.append("<th scope='col'>"+"W"+"</th>")
+            TableTr.append("<th scope='col'>"+"L"+"</th>")
+
+
+            TableTr.append("<th scope='col'>"+"PCT"+"</th>")
+            TableTr.append("<th scope='col'>"+"GB"+"</th>")
+            TableTr.append("<th scope='col'>"+"WCGB"+"</th>")
+            TableTr.append("<th scope='col'>"+"L10"+"</th>")
+            TableTr.append("<th scope='col'>"+"STRK"+"</th>")
+
+            TableHead.append(TableTr)
+            Table.append(TableHead)
+
+            return Table
+        }
+
+        function generateTableBody(i, indexTerminate) {
+            const tablebody = $('<tbody></tbody>')
+
+            while (i < indexTerminate) {
+                const tablebodyTr = $('<tr></tr>')
+
+                tablebodyTr.append("<th scope='row'>"+data[i].Name+"</th>")
+                tablebodyTr.append("<td>"+data[i].Wins+"</td>")
+                tablebodyTr.append("<td>"+data[i].Losses+"</td>")
+                tablebodyTr.append("<td>"+data[i].Percentage.toString().substring(1,5)+"</td>")
+
+                if (data[i].GamesBehind === undefined) {
+                    tablebodyTr.append("<td>"+"0"+"</td>")
+                } else {
+                    tablebodyTr.append("<td>"+data[i].GamesBehind+"</td>")
+                }
+
+                if (data[i].WildCardGamesBehind === undefined) {
+                    tablebodyTr.append("<td>"+"0"+"</td>")
+                } else {
+                    tablebodyTr.append("<td>"+data[i].WildCardGamesBehind+"</td>")
+                }
+
+                tablebodyTr.append("<td>"+data[i].LastTenGamesWins+"-"+data[i].LastTenGamesLosses+"</td>")
+                tablebodyTr.append("<td>"+data[i].Streak+"</td>")
+
+                tablebody.append(tablebodyTr)
+
+                i++;
+            }
+
+            return tablebody
+        }
+
+        alCentralTable = generateTable("bg-danger", "AL Central")
+        alCentralTable.append(generateTableBody(0, 5))
+
+        alEastTable = generateTable("bg-danger", "AL East")
+        alEastTable.append(generateTableBody(5, 10))
+
+        alWestTable = generateTable("bg-danger", "AL West")
+        alWestTable.append(generateTableBody(10, 15))
+
+        nlCentralTable = generateTable("bg-primary", "NL Central")
+        nlCentralTable.append(generateTableBody(15, 20))
+
+        nlEastTable = generateTable("bg-primary", "NL East")
+        nlEastTable.append(generateTableBody(20, 25))
+
+        nlWestTable = generateTable("bg-primary", "NL West")
+        nlWestTable.append(generateTableBody(25, 30))
+
+
+        standings
+            .append(alEastTable)
+            .append(alCentralTable)
+            .append(alWestTable)
+            .append(nlEastTable)
+            .append(nlCentralTable)
+            .append(nlWestTable)
+
+        $(".main").append(standings)
+    })
 })

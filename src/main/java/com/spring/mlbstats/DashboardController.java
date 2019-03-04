@@ -103,6 +103,10 @@ public class DashboardController {
 
         List<Standing> standings = responseEntity.getBody();
 
+        for (Standing st: standings) {
+            System.out.println(st.getCity());
+        }
+
         return new ResponseEntity<>(standings, HttpStatus.OK);
     }
 }
