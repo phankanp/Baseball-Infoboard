@@ -1,6 +1,7 @@
 package com.spring.mlbstats;
 
 import com.spring.mlbstats.model.DailySchedule;
+import com.spring.mlbstats.model.News;
 import com.spring.mlbstats.model.Stadium;
 import com.spring.mlbstats.model.Standing;
 import org.springframework.core.ParameterizedTypeReference;
@@ -103,10 +104,33 @@ public class DashboardController {
 
         List<Standing> standings = responseEntity.getBody();
 
-        for (Standing st: standings) {
-            System.out.println(st.getCity());
-        }
-
         return new ResponseEntity<>(standings, HttpStatus.OK);
+    }
+
+    @GetMapping("/news")
+    public ResponseEntity<?> news(){
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = "https://api.fantasydata.net/v3/mlb/scores/JSON/News";
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Ocp-Apim-Subscription-Key", "48558a4a258f4b838c0766999d3ada31");
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
+
+        ResponseEntity<List<News>> responseEntity = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<List<News>>(){}
+        );
+
+        List<News> news = responseEntity.getBody();
+
+        return new ResponseEntity<>(news, HttpStatus.OK);
     }
 }

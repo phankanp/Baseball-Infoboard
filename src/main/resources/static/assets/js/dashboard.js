@@ -1,11 +1,13 @@
 function hideSection() {
-    
-    if ($('.home').hasClass('active')){
+
+    if ($('.home').hasClass('active')) {
         $('#teams').fadeOut();
     } else if ($('.schedule').hasClass('active')) {
         $('#dailySchedule').fadeOut();
     } else if ($('.standings').hasClass('active')) {
         $('#standings').fadeOut();
+    } else if ($('.news').hasClass('active')) {
+        $('#news').fadeOut();
     }
 }
 
@@ -16,7 +18,7 @@ $(".home").click(function () {
     $('.nav li a.active').removeClass('active');
     $(this).addClass('active');
 
-    $('#teams').show();
+    $('#teams').fadeIn('slow');
 })
 
 /**********************************************************************************************************************/
@@ -32,8 +34,7 @@ $(".schedule").click(function (e) {
     $(this).addClass('active');
 
     $.get("http://localhost:8080/stadiums", function (data) {
-       stadiums = data
-
+        stadiums = data
     })
 
     $.get("http://localhost:8080/dailyschedule", function (data) {
@@ -42,27 +43,25 @@ $(".schedule").click(function (e) {
 
         let cardRow = $('<div class="row"></div>')
 
-        $.each(data, function(i){
-            let cardHeader = $("<div class=\"card-header text-center\" style='background-color: darkcyan'>"+data[i].Status+"</div>")
+        $.each(data, function (i) {
+            let cardHeader = $("<div class=\"card-header text-center\" style='background-color: darkcyan'>" + data[i].Status + "</div>")
 
             let cardBody = $('<div class="card-body"></div>')
 
-            cardBody.append("<h5 class='card-title'>"+data[i].AwayTeam+' at '+data[i].HomeTeam+"</h5>")
+            cardBody.append("<h5 class='card-title'>" + data[i].AwayTeam + ' at ' + data[i].HomeTeam + "</h5>")
 
             $.each(stadiums, function (e) {
                 if (data[i].StadiumID === stadiums[e].StadiumID) {
-                    cardBody.append("<p class=\"card-text\"><small class=\"text-muted\">"+stadiums[e].Name+"</small></p>")
+                    cardBody.append("<p class=\"card-text\"><small class=\"text-muted\">" + stadiums[e].Name + "</small></p>")
                 }
             })
 
-            cardBody.append("<p2 class='card-text'>"+"Start Time: "+data[i].DateTime.substring(11,16)+"</p2>")
-
-            console.log(data[i].AwayTeamRuns)
+            cardBody.append("<p2 class='card-text'>" + "Start Time: " + data[i].DateTime.substring(11, 16) + "</p2>")
 
             if (data[i].AwayTeamRuns === undefined) {
-                cardBody.append("<p class='card-text'>"+"Score: None"+"</p>")
+                cardBody.append("<p class='card-text'>" + "Score: None" + "</p>")
             } else {
-                cardBody.append("<p class='card-text'>"+"Score: "+data[i].AwayTeamRuns+"-"+data[i].HomeTeamRuns+" ("+data[i].InningHalf+": "+data[i].Inning+")"+"</p>")
+                cardBody.append("<p class='card-text'>" + "Score: " + data[i].AwayTeamRuns + "-" + data[i].HomeTeamRuns + " (" + data[i].InningHalf + ": " + data[i].Inning + ")" + "</p>")
             }
 
             let cardCenter = $('<div class="card text-center"></div>')
@@ -103,16 +102,16 @@ $(".standings").click(function (e) {
             const TableHead = $('<thead></thead>').addClass(tableHeadClass)
 
             const TableTr = $('<tr></tr>')
-            TableTr.append("<th scope='col'>"+tableName+"</th>")
-            TableTr.append("<th scope='col'>"+"W"+"</th>")
-            TableTr.append("<th scope='col'>"+"L"+"</th>")
+            TableTr.append("<th scope='col'>" + tableName + "</th>")
+            TableTr.append("<th scope='col'>" + "W" + "</th>")
+            TableTr.append("<th scope='col'>" + "L" + "</th>")
 
 
-            TableTr.append("<th scope='col'>"+"PCT"+"</th>")
-            TableTr.append("<th scope='col'>"+"GB"+"</th>")
-            TableTr.append("<th scope='col'>"+"WCGB"+"</th>")
-            TableTr.append("<th scope='col'>"+"L10"+"</th>")
-            TableTr.append("<th scope='col'>"+"STRK"+"</th>")
+            TableTr.append("<th scope='col'>" + "PCT" + "</th>")
+            TableTr.append("<th scope='col'>" + "GB" + "</th>")
+            TableTr.append("<th scope='col'>" + "WCGB" + "</th>")
+            TableTr.append("<th scope='col'>" + "L10" + "</th>")
+            TableTr.append("<th scope='col'>" + "STRK" + "</th>")
 
             TableHead.append(TableTr)
             Table.append(TableHead)
@@ -126,25 +125,25 @@ $(".standings").click(function (e) {
             while (i < indexTerminate) {
                 const tablebodyTr = $('<tr></tr>')
 
-                tablebodyTr.append("<th scope='row'>"+data[i].Name+"</th>")
-                tablebodyTr.append("<td>"+data[i].Wins+"</td>")
-                tablebodyTr.append("<td>"+data[i].Losses+"</td>")
-                tablebodyTr.append("<td>"+data[i].Percentage.toString().substring(1,5)+"</td>")
+                tablebodyTr.append("<th scope='row'>" + data[i].Name + "</th>")
+                tablebodyTr.append("<td>" + data[i].Wins + "</td>")
+                tablebodyTr.append("<td>" + data[i].Losses + "</td>")
+                tablebodyTr.append("<td>" + data[i].Percentage.toString().substring(1, 5) + "</td>")
 
                 if (data[i].GamesBehind === undefined) {
-                    tablebodyTr.append("<td>"+"0"+"</td>")
+                    tablebodyTr.append("<td>" + "0" + "</td>")
                 } else {
-                    tablebodyTr.append("<td>"+data[i].GamesBehind+"</td>")
+                    tablebodyTr.append("<td>" + data[i].GamesBehind + "</td>")
                 }
 
                 if (data[i].WildCardGamesBehind === undefined) {
-                    tablebodyTr.append("<td>"+"0"+"</td>")
+                    tablebodyTr.append("<td>" + "0" + "</td>")
                 } else {
-                    tablebodyTr.append("<td>"+data[i].WildCardGamesBehind+"</td>")
+                    tablebodyTr.append("<td>" + data[i].WildCardGamesBehind + "</td>")
                 }
 
-                tablebodyTr.append("<td>"+data[i].LastTenGamesWins+"-"+data[i].LastTenGamesLosses+"</td>")
-                tablebodyTr.append("<td>"+data[i].Streak+"</td>")
+                tablebodyTr.append("<td>" + data[i].LastTenGamesWins + "-" + data[i].LastTenGamesLosses + "</td>")
+                tablebodyTr.append("<td>" + data[i].Streak + "</td>")
 
                 tablebody.append(tablebodyTr)
 
@@ -184,3 +183,37 @@ $(".standings").click(function (e) {
         $(".main").append(standings)
     })
 })
+/**********************************************************************************************************************/
+$(".news").click(function (e) {
+    hideSection();
+
+    $('#news').remove();
+
+    $('.nav li a.active').removeClass('active');
+
+    $(this).addClass('active');
+
+    $.get("http://localhost:8080/news", function (data) {
+        const news = $('<div id="news"></div>');
+
+        $.each(data, function (i) {
+            const card = $('<div class="card text-center" style="margin-bottom: 30px"></div>');
+            card.append($("<div class='card-header bg-danger' style='color: white'>" + data[i].Updated.substring(0, 10) + "</div>"));
+
+            const cardBody = $('<div class="card-body"></div>');
+
+            cardBody
+                .append("<h5 class='card-title'>" + data[i].Title + "</h5>")
+                .append("<a class='btn btn-primary' style='color: white'" + "href=" + "'" + data[i].Url + "'" + ">" + "Full Story" + "</a>");
+
+            card.append(cardBody);
+
+            card.append($("<div class='card-footer text-muted'>"+data[i].TimeAgo+"</div>"))
+
+            news.append(card)
+        })
+
+        $(".main").append(news)
+    })
+})
+/**********************************************************************************************************************/

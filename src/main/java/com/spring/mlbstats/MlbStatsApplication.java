@@ -31,42 +31,5 @@ public class MlbStatsApplication {
     public static void main(String[] args) throws IOException {
 
         SpringApplication.run(MlbStatsApplication.class, args);
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-        Date date = new Date();
-
-        String url = "https://api.fantasydata.net/v3/mlb/scores/JSON/GamesByDate/" + dateFormat.format(date);
-//
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Ocp-Apim-Subscription-Key", "48558a4a258f4b838c0766999d3ada31");
-
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-
-
-        ResponseEntity<List<DailySchedule>> responseEntity = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                entity,
-                new ParameterizedTypeReference<List<DailySchedule>>(){}
-        );
-//
-//        Player[] players = responseEntity.getBody();
-//
-//        for (Player p : players) {
-//            System.out.println(p.getFirstName() + " " + p.getLastName());
-//        }
-
-        List<DailySchedule> dailySchedule = responseEntity.getBody();
-
-        for (DailySchedule ds : dailySchedule) {
-            System.out.println(ds.getAwayTeam() + " - " + ds.getHomeTeam());
-        }
-
-
-
     }
 }
