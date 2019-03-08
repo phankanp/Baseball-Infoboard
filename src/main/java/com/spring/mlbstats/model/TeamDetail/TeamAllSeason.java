@@ -1,4 +1,4 @@
-package com.spring.mlbstats.model;
+package com.spring.mlbstats.model.TeamDetail;
 
 import java.util.HashMap;
 import java.util.Map;

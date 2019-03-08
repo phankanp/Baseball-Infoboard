@@ -1,4 +1,4 @@
-package com.spring.mlbstats.model;
+package com.spring.mlbstats.model.TeamDetail;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,23 +11,23 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "team_all_season"
+        "roster_40"
 })
-public class TeamExample {
+public class TeamRosterWrapper {
 
-    @JsonProperty("team_all_season")
-    private TeamAllSeason teamAllSeason;
+    @JsonProperty("roster_40")
+    private TeamRoster40 roster40;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("team_all_season")
-    public TeamAllSeason getTeamAllSeason() {
-        return teamAllSeason;
+    @JsonProperty("roster_40")
+    public TeamRoster40 getRoster40() {
+        return roster40;
     }
 
-    @JsonProperty("team_all_season")
-    public void setTeamAllSeason(TeamAllSeason teamAllSeason) {
-        this.teamAllSeason = teamAllSeason;
+    @JsonProperty("roster_40")
+    public void setRoster40(TeamRoster40 roster40) {
+        this.roster40 = roster40;
     }
 
     @JsonAnyGetter

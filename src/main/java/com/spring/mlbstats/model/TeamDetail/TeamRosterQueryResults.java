@@ -1,4 +1,4 @@
-package com.spring.mlbstats.model;
+package com.spring.mlbstats.model.TeamDetail;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,14 +16,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "totalSize",
         "row"
 })
-public class TeamQueryResults {
-
+public class TeamRosterQueryResults {
     @JsonProperty("created")
     private String created;
     @JsonProperty("totalSize")
     private String totalSize;
     @JsonProperty("row")
-    private List<TeamRow> row = null;
+    private List<TeamRosterRow> row = null;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -48,12 +47,12 @@ public class TeamQueryResults {
     }
 
     @JsonProperty("row")
-    public List<TeamRow> getRow() {
+    public List<TeamRosterRow> getRow() {
         return row;
     }
 
     @JsonProperty("row")
-    public void setRow(List<TeamRow> row) {
+    public void setRow(List<TeamRosterRow> row) {
         this.row = row;
     }
 

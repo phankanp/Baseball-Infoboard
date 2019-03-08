@@ -1,5 +1,4 @@
 function hideSection() {
-
     if ($('.home').hasClass('active')) {
         $('#teams').fadeOut();
     } else if ($('.schedule').hasClass('active')) {
@@ -10,7 +9,62 @@ function hideSection() {
         $('#news').fadeOut();
     }
 }
+/**********************************************************************************************************************/
+function teamPageHideSection(){
+    if ($('.upcomingSchedule').hasClass('active')) {
+        $('#upcomingSchedule').fadeOut();
+    } else if ($('.roster').hasClass('active')) {
+        $('#roster').fadeOut();
+    } else if ($('.hittingStats').hasClass('active')) {
+        $('#hittingStats').fadeOut();
+    } else if ($('.pitchingStats').hasClass('active')) {
+        $('#pitchingStats').fadeOut();
+    }
+}
+/**********************************************************************************************************************/
+$(".upcomingSchedule").click(function () {
+    e.preventDefault();
+    teamPageHideSection()
 
+    $('.nav li a.active').removeClass('active');
+    $(this).addClass('active');
+
+    $('#upcomingSchedule').fadeIn('slow');
+})
+/**********************************************************************************************************************/
+$(".roster").click(function () {
+
+    teamPageHideSection()
+
+    $('.nav li a.active').removeClass('active');
+    $(this).addClass('active');
+
+    $('#roster').fadeIn('slow');
+    return false;
+})
+/**********************************************************************************************************************/
+$(".hittingStats").click(function () {
+
+    teamPageHideSection()
+
+    $('.nav li a.active').removeClass('active');
+    $(this).addClass('active');
+
+    $('#hittingStats').fadeIn('slow');
+    return false;
+})
+/**********************************************************************************************************************/
+$(".pitchingStats").click(function () {
+
+    teamPageHideSection()
+
+    $('.nav li a.active').removeClass('active');
+    $(this).addClass('active');
+
+    $('#pitchingStats').fadeIn('slow');
+    return false;
+})
+/**********************************************************************************************************************/
 $(".home").click(function () {
 
     hideSection()
@@ -19,6 +73,7 @@ $(".home").click(function () {
     $(this).addClass('active');
 
     $('#teams').fadeIn('slow');
+    return false;
 })
 
 /**********************************************************************************************************************/
@@ -44,7 +99,7 @@ $(".schedule").click(function (e) {
         let cardRow = $('<div class="row"></div>')
 
         $.each(data, function (i) {
-            let cardHeader = $("<div class=\"card-header text-center\" style='background-color: darkcyan'>" + data[i].Status + "</div>")
+            let cardHeader = $("<div class=\"card-header text-center\" style='background-color: darkcyan; color: white'>" + data[i].Status + "</div>")
 
             let cardBody = $('<div class="card-body"></div>')
 
