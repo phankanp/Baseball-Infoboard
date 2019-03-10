@@ -119,7 +119,7 @@
                     <div class="card-body">
                         <h5 class="card-title" th:text="${games.getAwayTeam()} + ' vs ' + ${games.getHomeTeam()}">DET at ATL</h5>
                         <p class="card-text"><small class="text-muted" th:text="${games.getStadiumName()}">SunTrust Park</small></p>
-                        <p2 class="card-text" th:text="${games.getDateTime().substring(11, 16)}">Start Time: 13:05</p2>
+                        <p2 class="card-text" th:text="'Start Time: '+ ${games.getDateTime().substring(11, 16)}">Start Time: 13:05</p2>
                         <!--<p class="card-text" th:text="${games.getAwayTeamRuns()} + '-' ${games.getHomeTeamRuns()} + ' ' + '(' + ${games.getInningHalf()} ': ' ${games.getInning()}">Score: 2-9 (T: 9)</p>-->
                     </div>
                 </div>
@@ -129,9 +129,14 @@
     <div id="roster" style="display: none">
         <div class="row">
             <div class="col-md-3 col-sm-6 col-xs-12 text-center" th:each="player : ${roster}" style="margin-bottom: 30px">
-                <h6 th:text="${player.getNameFull()}" class="text-center"></h6>
-                <a th:href="@{|/player/${player.getPlayerId()}|}"><img th:src="@{'http://mlb.mlb.com/mlb/images/players/head_shot/' + ${player.getPlayerId()} + '.jpg'}" class="img-thumbnail">
-                </a>
+                <div th:if="${player.getPositionTxt()} == 'P'">
+                    <h6 th:text="${player.getNameFull()}" class="text-center"></h6>
+                    <a th:href="@{|/player/pitcher/${player.getPlayerId()}|}"><img th:src="@{'http://mlb.mlb.com/mlb/images/players/head_shot/' + ${player.getPlayerId()} + '.jpg'}" class="img-thumbnail"></a>
+                </div>
+                <div th:if="${player.getPositionTxt()} != 'P'">
+                    <h6 th:text="${player.getNameFull()}" class="text-center"></h6>
+                    <a th:href="@{|/player/hitter/${player.getPlayerId()}|}"><img th:src="@{'http://mlb.mlb.com/mlb/images/players/head_shot/' + ${player.getPlayerId()} + '.jpg'}" class="img-thumbnail"></a>
+                </div>
             </div>
         </div>
     </div>

@@ -22,6 +22,16 @@ function teamPageHideSection(){
     }
 }
 /**********************************************************************************************************************/
+function playerPageHideSection(){
+    if ($('.projectedStats').hasClass('active')) {
+        $('#projectedStats').fadeOut();
+    } else if ($('.seasonStats').hasClass('active')) {
+        $('#seasonStats').fadeOut();
+    } else if ($('.careerStats').hasClass('active')) {
+        $('#careerStats').fadeOut();
+    }
+}
+/**********************************************************************************************************************/
 $(".upcomingSchedule").click(function () {
     e.preventDefault();
     teamPageHideSection()
@@ -65,6 +75,42 @@ $(".pitchingStats").click(function () {
     return false;
 })
 /**********************************************************************************************************************/
+$(".projectedStats").click(function () {
+
+    playerPageHideSection()
+
+    $('.nav li a.active').removeClass('active');
+    $(this).addClass('active');
+
+    $('#projectedStats').fadeIn('slow');
+
+    return false;
+})
+/**********************************************************************************************************************/
+$(".seasonStats").click(function () {
+
+    playerPageHideSection()
+
+    $('.nav li a.active').removeClass('active');
+    $(this).addClass('active');
+
+    $('#seasonStats').fadeIn('slow');
+
+    return false;
+})
+/**********************************************************************************************************************/
+$(".careerStats").click(function () {
+
+    playerPageHideSection()
+
+    $('.nav li a.active').removeClass('active');
+    $(this).addClass('active');
+
+    $('#careerStats').fadeIn('slow');
+
+    return false;
+})
+/**********************************************************************************************************************/
 $(".home").click(function () {
 
     hideSection()
@@ -73,7 +119,7 @@ $(".home").click(function () {
     $(this).addClass('active');
 
     $('#teams').fadeIn('slow');
-    return false;
+
 })
 
 /**********************************************************************************************************************/

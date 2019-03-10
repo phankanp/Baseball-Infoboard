@@ -2,6 +2,14 @@ package com.spring.mlbstats;
 
 import com.spring.mlbstats.model.DailySchedule;
 import com.spring.mlbstats.model.News;
+import com.spring.mlbstats.model.PlayerDetail.CareerPitchingStats.CareerPitchingStatsRow;
+import com.spring.mlbstats.model.PlayerDetail.CareerPitchingStats.CareerPitchingStatsWrapper;
+import com.spring.mlbstats.model.PlayerDetail.PlayerRow;
+import com.spring.mlbstats.model.PlayerDetail.PlayerWrapper;
+import com.spring.mlbstats.model.PlayerDetail.ProjectedPitchingStats.ProjectedPitchingStatsRow;
+import com.spring.mlbstats.model.PlayerDetail.ProjectedPitchingStats.ProjectedPitchingStatsWrapper;
+import com.spring.mlbstats.model.PlayerDetail.SeasonPitchingStats.SeasonPitchingStatsRow;
+import com.spring.mlbstats.model.PlayerDetail.SeasonPitchingStats.SeasonPitchingStatsWrapper;
 import com.spring.mlbstats.model.Stadium;
 import com.spring.mlbstats.model.Standing;
 import com.spring.mlbstats.model.TeamDetail.*;
@@ -13,8 +21,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -144,7 +150,7 @@ public class DashboardController {
     public String teamDetails(@PathVariable String teamCode, @PathVariable Long teamId, Model model){
         RestTemplate restTemplate = new RestTemplate();
 
-        String url  = "http://lookup-service-prod.mlb.com/json/named.team_all_season.bam?sport_code=" +
+        String getTeamUrl  = "http://lookup-service-prod.mlb.com/json/named.team_all_season.bam?sport_code=" +
                 "'mlb'&all_star_sw='N'&sort_order=name_asc&season='2018'";
 
         String getRosterUrl = "http://lookup-service-prod.mlb.com/json/named.roster_40.bam?team_id=" + teamId;
@@ -163,7 +169,7 @@ public class DashboardController {
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
         // Gets single team info
-        TeamBodyWrapper teamBodyWrapper = restTemplate.getForObject(url, TeamBodyWrapper.class);
+        TeamBodyWrapper teamBodyWrapper = restTemplate.getForObject(getTeamUrl, TeamBodyWrapper.class);
 
         TeamRow teamRow = new TeamRow();
 
@@ -243,5 +249,70 @@ public class DashboardController {
         model.addAttribute("teamStats", teamStats);
 
         return "team_page";
+    }
+
+    @GetMapping("/player/hitter/{playerId}")
+    public String hitterDetails(@PathVariable Long playerId, Model model){
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String getPlayerUrl  = "http://lookup-service-prod.mlb.com/json/named.player_info.bam?sport_code='mlb'&player_id=" + playerId;
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Ocp-Apim-Subscription-Key", "b3572283c9474a0386ead523d82c99f8");
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
+
+
+        PlayerWrapper playerWrapper = restTemplate.getForObject(getPlayerUrl, PlayerWrapper.class);
+
+        PlayerRow player  = playerWrapper.getPlayerInfo().getQueryResults().getRow();
+
+
+        model.addAttribute("player", player);
+
+        return "hitter_player_page";
+
+    }
+
+    @GetMapping("/player/pitcher/{playerId}")
+    public String pitcherDetails(@PathVariable Long playerId, Model model){
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String getPlayerUrl  = "http://lookup-service-prod.mlb.com/json/named.player_info.bam?sport_code='mlb'&player_id=" + playerId;
+        String getProjectedPitchingStats = "http://lookup-service-prod.mlb.com/json/named.proj_pecota_pitching.bam?season='2019'&player_id=" +playerId;
+        String getSeasonPitchingStats = "http://lookup-service-prod.mlb.com/json/named.sport_pitching_tm.bam?league_list_id='mlb'&game_type='R'&season='2018'&player_id=" +playerId;
+        String getCareerPitchingStats = "http://lookup-service-prod.mlb.com/json/named.sport_career_pitching.bam?league_list_id='mlb'&game_type='R'&player_id=" +playerId;
+
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Ocp-Apim-Subscription-Key", "b3572283c9474a0386ead523d82c99f8");
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
+        PlayerWrapper playerWrapper = restTemplate.getForObject(getPlayerUrl, PlayerWrapper.class);
+        ProjectedPitchingStatsWrapper projected = restTemplate.getForObject(getProjectedPitchingStats, ProjectedPitchingStatsWrapper.class);
+        SeasonPitchingStatsWrapper season = restTemplate.getForObject(getSeasonPitchingStats, SeasonPitchingStatsWrapper.class);
+        CareerPitchingStatsWrapper career = restTemplate.getForObject(getCareerPitchingStats, CareerPitchingStatsWrapper.class);
+
+
+        PlayerRow player  = playerWrapper.getPlayerInfo().getQueryResults().getRow();
+        ProjectedPitchingStatsRow projectedPitchingStatsRow = projected.getProjPecotaPitching().getQueryResults().getRow();
+        SeasonPitchingStatsRow seasonPitchingStatsRow = season.getSeasonPitchingStats().getQueryResults().getRow();
+        CareerPitchingStatsRow careerPitchingStatsRow = career.getCareerPitchingStats().getQueryResults().getRow();
+
+        model.addAttribute("player", player);
+        model.addAttribute("projectedPitchingStats", projectedPitchingStatsRow);
+        model.addAttribute("seasonPitchingStats", seasonPitchingStatsRow);
+        model.addAttribute("careerPitchingStats", careerPitchingStatsRow);
+
+        return "pitcher_player_page";
+
     }
 }
