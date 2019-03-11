@@ -2,12 +2,19 @@ package com.spring.mlbstats;
 
 import com.spring.mlbstats.model.DailySchedule;
 import com.spring.mlbstats.model.News;
+import com.spring.mlbstats.model.PlayerDetail.CareerHittingStats.CareerHittingStatsRow;
+import com.spring.mlbstats.model.PlayerDetail.CareerHittingStats.CareerHittingStatsWrapper;
 import com.spring.mlbstats.model.PlayerDetail.CareerPitchingStats.CareerPitchingStatsRow;
 import com.spring.mlbstats.model.PlayerDetail.CareerPitchingStats.CareerPitchingStatsWrapper;
 import com.spring.mlbstats.model.PlayerDetail.PlayerRow;
 import com.spring.mlbstats.model.PlayerDetail.PlayerWrapper;
+import com.spring.mlbstats.model.PlayerDetail.ProjectedHittingStats.ProjectedHittingStatsRow;
+import com.spring.mlbstats.model.PlayerDetail.ProjectedHittingStats.ProjectedHittingStatsWrapper;
 import com.spring.mlbstats.model.PlayerDetail.ProjectedPitchingStats.ProjectedPitchingStatsRow;
 import com.spring.mlbstats.model.PlayerDetail.ProjectedPitchingStats.ProjectedPitchingStatsWrapper;
+import com.spring.mlbstats.model.PlayerDetail.SeasonHittingStats.SeasonHittingStats;
+import com.spring.mlbstats.model.PlayerDetail.SeasonHittingStats.SeasonHittingStatsRow;
+import com.spring.mlbstats.model.PlayerDetail.SeasonHittingStats.SeasonHittingStatsWrapper;
 import com.spring.mlbstats.model.PlayerDetail.SeasonPitchingStats.SeasonPitchingStatsRow;
 import com.spring.mlbstats.model.PlayerDetail.SeasonPitchingStats.SeasonPitchingStatsWrapper;
 import com.spring.mlbstats.model.Stadium;
@@ -256,26 +263,28 @@ public class DashboardController {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        String getPlayerUrl  = "http://lookup-service-prod.mlb.com/json/named.player_info.bam?sport_code='mlb'&player_id=" + playerId;
+        String getPlayer  = "http://lookup-service-prod.mlb.com/json/named.player_info.bam?sport_code='mlb'&player_id=" + playerId;
+        String getProjectedHittingStats = "http://lookup-service-prod.mlb.com/json/named.proj_pecota_batting.bam?season='2019'&player_id=" +playerId;
+        String getSeasonHittingStats = "http://lookup-service-prod.mlb.com/json/named.sport_hitting_tm.bam?league_list_id='mlb'&game_type='R'&season='2018'&player_id=" +playerId;
+        String getCareerHittingStats = "http://lookup-service-prod.mlb.com/json/named.sport_career_hitting.bam?league_list_id='mlb'&game_type='R'&player_id=" +playerId;
 
-        HttpHeaders headers = new HttpHeaders();
+        PlayerWrapper player = restTemplate.getForObject(getPlayer, PlayerWrapper.class);
+        ProjectedHittingStatsWrapper projected = restTemplate.getForObject(getProjectedHittingStats, ProjectedHittingStatsWrapper.class);
+        SeasonHittingStatsWrapper season = restTemplate.getForObject(getSeasonHittingStats, SeasonHittingStatsWrapper.class);
+        CareerHittingStatsWrapper career = restTemplate.getForObject(getCareerHittingStats, CareerHittingStatsWrapper.class);
 
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Ocp-Apim-Subscription-Key", "b3572283c9474a0386ead523d82c99f8");
-
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-
-
-
-        PlayerWrapper playerWrapper = restTemplate.getForObject(getPlayerUrl, PlayerWrapper.class);
-
-        PlayerRow player  = playerWrapper.getPlayerInfo().getQueryResults().getRow();
+        PlayerRow playerDetail  = player.getPlayerInfo().getQueryResults().getRow();
+        ProjectedHittingStatsRow projectedHittingStatsRow = projected.getProjPecotaBatting().getQueryResults().getRow();
+        SeasonHittingStatsRow seasonHittingStats = season.getSeasonHittingStats().getQueryResults().getRow();
+        CareerHittingStatsRow careerHittingStatsRow = career.getCareerHittingStats().getQueryResults().getRow();
 
 
-        model.addAttribute("player", player);
+        model.addAttribute("player", playerDetail);
+        model.addAttribute("projectedHittingStats", projectedHittingStatsRow);
+        model.addAttribute("seasonHittingStats", seasonHittingStats);
+        model.addAttribute("careerHittingStats", careerHittingStatsRow);
 
         return "hitter_player_page";
-
     }
 
     @GetMapping("/player/pitcher/{playerId}")
@@ -283,24 +292,15 @@ public class DashboardController {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        String getPlayerUrl  = "http://lookup-service-prod.mlb.com/json/named.player_info.bam?sport_code='mlb'&player_id=" + playerId;
+        String getPlayer  = "http://lookup-service-prod.mlb.com/json/named.player_info.bam?sport_code='mlb'&player_id=" + playerId;
         String getProjectedPitchingStats = "http://lookup-service-prod.mlb.com/json/named.proj_pecota_pitching.bam?season='2019'&player_id=" +playerId;
         String getSeasonPitchingStats = "http://lookup-service-prod.mlb.com/json/named.sport_pitching_tm.bam?league_list_id='mlb'&game_type='R'&season='2018'&player_id=" +playerId;
         String getCareerPitchingStats = "http://lookup-service-prod.mlb.com/json/named.sport_career_pitching.bam?league_list_id='mlb'&game_type='R'&player_id=" +playerId;
 
-
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Ocp-Apim-Subscription-Key", "b3572283c9474a0386ead523d82c99f8");
-
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-
-        PlayerWrapper playerWrapper = restTemplate.getForObject(getPlayerUrl, PlayerWrapper.class);
+        PlayerWrapper playerWrapper = restTemplate.getForObject(getPlayer, PlayerWrapper.class);
         ProjectedPitchingStatsWrapper projected = restTemplate.getForObject(getProjectedPitchingStats, ProjectedPitchingStatsWrapper.class);
         SeasonPitchingStatsWrapper season = restTemplate.getForObject(getSeasonPitchingStats, SeasonPitchingStatsWrapper.class);
         CareerPitchingStatsWrapper career = restTemplate.getForObject(getCareerPitchingStats, CareerPitchingStatsWrapper.class);
-
 
         PlayerRow player  = playerWrapper.getPlayerInfo().getQueryResults().getRow();
         ProjectedPitchingStatsRow projectedPitchingStatsRow = projected.getProjPecotaPitching().getQueryResults().getRow();
@@ -313,6 +313,5 @@ public class DashboardController {
         model.addAttribute("careerPitchingStats", careerPitchingStatsRow);
 
         return "pitcher_player_page";
-
     }
 }

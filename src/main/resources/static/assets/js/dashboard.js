@@ -33,7 +33,7 @@ function playerPageHideSection(){
 }
 /**********************************************************************************************************************/
 $(".upcomingSchedule").click(function () {
-    e.preventDefault();
+
     teamPageHideSection()
 
     $('.nav li a.active').removeClass('active');

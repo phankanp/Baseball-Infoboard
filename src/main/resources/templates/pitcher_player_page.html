@@ -65,7 +65,7 @@
         </a>
         <div class="card-body">
             <h1 class="card-title text-center"
-                th:text="'#' + ${player.getJerseyNumber()} + ' - ' + ${player.getNameFull()}">Card title</h1>
+                th:text="'#' + ${player.getJerseyNumber()} + ' - ' + ${player.getNameFull()} + ' - ' + ${player.getPrimaryPositionTxt()}">Card title</h1>
             <p class="card-text text-center" th:text="'Team: ' + ${player.getTeamName()}"></p>
             <p class="card-text text-center"
                th:text="'DOB: ' + ${player.getBirthDate().substring(5,7)} + '/' + ${player.getBirthDate().substring(8,10)} + '/' + ${player.getBirthDate().substring(0,4)} + ' - ' + 'Age: ' + ${player.getAge()}"></p>
@@ -84,7 +84,7 @@
         </div>
     </div>
 
-    <!--&lt;!&ndash; Nav &ndash;&gt;-->
+    <!-- Nav -->
     <div class="container" style="margin-top: 20px">
         <ul class="nav nav-pills justify-content-center">
             <li class="nav-item">

@@ -63,7 +63,7 @@
                 height="100">
         </a>
         <div class="card-body">
-            <h1 class="card-title text-center" th:text="'#' + ${player.getJerseyNumber()} + ' - ' + ${player.getNameFull()}">Card title</h1>
+            <h1 class="card-title text-center" th:text="'#' + ${player.getJerseyNumber()} + ' - ' + ${player.getNameFull()} + ' - ' + ${player.getPrimaryPositionTxt()}">Card title</h1>
             <p class="card-text text-center" th:text="'Team: ' + ${player.getTeamName()}"></p>
             <p class="card-text text-center" th:text="'DOB: ' + ${player.getBirthDate().substring(5,7)} + '/' + ${player.getBirthDate().substring(8,10)} + '/' + ${player.getBirthDate().substring(0,4)} + ' - ' + 'Age: ' + ${player.getAge()}"></p>
             <p class="card-text text-center" th:text="'Height: ' + ${player.getHeightFeet()} + '\'' + ${player.getHeightInches()} + ' - ' + 'Throws: ' + ${player.getThrows()} + ' - ' + ' Bats: ' + ${player.getBats()}"></p>
@@ -78,14 +78,14 @@
         </div>
     </div>
 
-    <!--&lt;!&ndash; Nav &ndash;&gt;-->
+    <!-- Nav -->
     <div class="container" style="margin-top: 20px">
         <ul class="nav nav-pills justify-content-center">
             <li class="nav-item">
                 <a class="nav-link projectedStats active" href="#">Projected 2019 Stats</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link currentSeason" href="#">Current Season Stats</a>
+                <a class="nav-link seasonStats" href="#">Current Season Stats</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link careerStats" href="#">Career Stats</a>
@@ -96,156 +96,218 @@
 </div>
 
 <!-- Main Content -->
-<!--<div class="container main">-->
-    <!--<div id="upcomingSchedule">-->
-        <!--<div class="row">-->
-            <!--<div class="col-md-3 col-sm-6 col-xs-12" th:each="games : ${nextTwelveGames}" style="margin-bottom: 20px">-->
-                <!--<div class="card text-center">-->
-                    <!--<div class="card-header text-center" style="background-color: darkcyan; color: white" th:text="${games.getDay().substring(0,10)}">Final</div>-->
-                    <!--<div class="card-body">-->
-                        <!--<h5 class="card-title" th:text="${games.getAwayTeam()} + ' vs ' + ${games.getHomeTeam()}">DET at ATL</h5>-->
-                        <!--<p class="card-text"><small class="text-muted" th:text="${games.getStadiumName()}">SunTrust Park</small></p>-->
-                        <!--<p2 class="card-text" th:text="'Start Time: '+ ${games.getDateTime().substring(11, 16)}">Start Time: 13:05</p2>-->
-                        <!--&lt;!&ndash;<p class="card-text" th:text="${games.getAwayTeamRuns()} + '-' ${games.getHomeTeamRuns()} + ' ' + '(' + ${games.getInningHalf()} ': ' ${games.getInning()}">Score: 2-9 (T: 9)</p>&ndash;&gt;-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-    <!--<div id="roster" style="display: none">-->
-        <!--<div class="row">-->
-            <!--<div class="col-md-3 col-sm-6 col-xs-12 text-center" th:each="player : ${roster}" style="margin-bottom: 30px">-->
-                <!--<h6 th:text="${player.getNameFull()}" class="text-center"></h6>-->
-                <!--<a th:href="@{|/player/${player.getPlayerId()}|}"><img th:src="@{'http://mlb.mlb.com/mlb/images/players/head_shot/' + ${player.getPlayerId()} + '.jpg'}" class="img-thumbnail">-->
-                <!--</a>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-    <!--<div id="hittingStats" th:object="${teamStats}" style="display: none">-->
-        <!--<div class="col-md-auto">-->
-            <!--<ul class="list-group">-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Games-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getGames()}">14</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--At Bats-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getAtBats()}">2</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Runs-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getRuns()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Hits-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getHits()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Singles-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getSingles()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Doubles-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getDoubles()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Triples-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getTriples()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--HomeRuns-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getHomeRuns()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Runs Batted In-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getRunsBattedIn()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Batting Average-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getBattingAverage()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Sacrifice Flies-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getSacrificeFlies()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Strikeouts-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getStrikeouts()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Walks-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getWalks()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Stolen Bases-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getStolenBases()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--On Base Percentage-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getOnBasePercentage()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Slugging Percentage-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getSluggingPercentage()}">1</span>-->
-                <!--</li>-->
-            <!--</ul>-->
-        <!--</div>-->
-    <!--</div>-->
-    <!--<div id="pitchingStats" th:object="${teamStats}" style="display: none">-->
-        <!--<div class="col-md-auto">-->
-            <!--<ul class="list-group">-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Wins-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getWins()}">14</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Losses-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getLosses()}">2</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Saves-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getSaves()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Innings Pitched-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getInningsPitchedFull()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Total Outs Pitched-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getTotalOutsPitched()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Earned Run Average-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getEarnedRunAverage()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Hits Given Up-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getPitchingHits()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Runs Given Up-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getPitchingRuns()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Home Runs Given Up-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getPitchingHomeRuns()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Strikeouts-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getPitchingStrikeouts()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Strikeouts Per Nine-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getPitchingStrikeoutsPerNineInnings()}">1</span>-->
-                <!--</li>-->
-                <!--<li class="list-group-item d-flex justify-content-between align-items-center">-->
-                    <!--Walks Per Nine-->
-                    <!--<span class="badge badge-primary badge-pill" th:text="${teamStats.getPitchingWalksPerNineInnings()}">1</span>-->
-                <!--</li>-->
-            <!--</ul>-->
-        <!--</div>-->
-    <!--</div>-->
-<!--</div>-->
+<div class="container main">
+    <div id="projectedStats" th:object="${projectedHittingStats}">
+        <div class="col-md-auto">
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Games
+                    <span class="badge badge-primary badge-pill" th:text="${projectedHittingStats.getG()}">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    At Bats
+                    <span class="badge badge-primary badge-pill" th:text="${projectedHittingStats.getAb()}">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Hits
+                    <span class="badge badge-primary badge-pill" th:text="${projectedHittingStats.getH()}">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Singles
+                    <span class="badge badge-primary badge-pill" th:text="${projectedHittingStats.getS()}">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Doubles
+                    <span class="badge badge-primary badge-pill" th:text="${projectedHittingStats.getD()}">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Triples
+                    <span class="badge badge-primary badge-pill" th:text="${projectedHittingStats.getT()}">2</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Home Runs
+                    <span class="badge badge-primary badge-pill" th:text="${projectedHittingStats.getHr()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Runs Batted In
+                    <span class="badge badge-primary badge-pill" th:text="${projectedHittingStats.getRbi()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Batting Average
+                    <span class="badge badge-primary badge-pill" th:text="${projectedHittingStats.getAvg()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Slugging Percentage
+                    <span class="badge badge-primary badge-pill" th:text="${projectedHittingStats.getSlg()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    On-base Plus Slugging
+                    <span class="badge badge-primary badge-pill" th:text="${projectedHittingStats.getOps()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    On-base Percentage
+                    <span class="badge badge-primary badge-pill" th:text="${projectedHittingStats.getObp()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Stolen Bases
+                    <span class="badge badge-primary badge-pill" th:text="${projectedHittingStats.getSb()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Caught Stealing
+                    <span class="badge badge-primary badge-pill" th:text="${projectedHittingStats.getCs()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Strikeouts
+                    <span class="badge badge-primary badge-pill" th:text="${projectedHittingStats.getSo()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Walks
+                    <span class="badge badge-primary badge-pill" th:text="${projectedHittingStats.getBb()}">1</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="seasonStats" th:object="${seasonHittingStats}" style="display: none">
+        <div class="col-md-auto">
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Games
+                    <span class="badge badge-primary badge-pill" th:text="${seasonHittingStats.getG()}">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    At Bats
+                    <span class="badge badge-primary badge-pill" th:text="${seasonHittingStats.getAb()}">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Hits
+                    <span class="badge badge-primary badge-pill" th:text="${seasonHittingStats.getH()}">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Singles
+                    <span class="badge badge-primary badge-pill" th:text="${seasonHittingStats.getSingles()}">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Doubles
+                    <span class="badge badge-primary badge-pill" th:text="${seasonHittingStats.getD()}">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Triples
+                    <span class="badge badge-primary badge-pill" th:text="${seasonHittingStats.getT()}">2</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Home Runs
+                    <span class="badge badge-primary badge-pill" th:text="${seasonHittingStats.getHr()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Runs Batted In
+                    <span class="badge badge-primary badge-pill" th:text="${seasonHittingStats.getRbi()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Batting Average
+                    <span class="badge badge-primary badge-pill" th:text="${seasonHittingStats.getAvg()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Slugging Percentage
+                    <span class="badge badge-primary badge-pill" th:text="${seasonHittingStats.getSlg()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    On-base Plus Slugging
+                    <span class="badge badge-primary badge-pill" th:text="${seasonHittingStats.getOps()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    On-base Percentage
+                    <span class="badge badge-primary badge-pill" th:text="${seasonHittingStats.getObp()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Stolen Bases
+                    <span class="badge badge-primary badge-pill" th:text="${seasonHittingStats.getSb()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Caught Stealing
+                    <span class="badge badge-primary badge-pill" th:text="${seasonHittingStats.getCs()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Strikeouts
+                    <span class="badge badge-primary badge-pill" th:text="${seasonHittingStats.getSo()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Walks
+                    <span class="badge badge-primary badge-pill" th:text="${seasonHittingStats.getBb()}">1</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="careerStats" th:object="${careerHittingStats}" style="display: none">
+        <div class="col-md-auto">
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Games
+                    <span class="badge badge-primary badge-pill" th:text="${careerHittingStats.getG()}">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    At Bats
+                    <span class="badge badge-primary badge-pill" th:text="${careerHittingStats.getAb()}">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Hits
+                    <span class="badge badge-primary badge-pill" th:text="${careerHittingStats.getH()}">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Singles
+                    <span class="badge badge-primary badge-pill" th:text="${careerHittingStats.getSingles()}">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Doubles
+                    <span class="badge badge-primary badge-pill" th:text="${careerHittingStats.getD()}">14</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Triples
+                    <span class="badge badge-primary badge-pill" th:text="${careerHittingStats.getT()}">2</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Home Runs
+                    <span class="badge badge-primary badge-pill" th:text="${careerHittingStats.getHr()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Runs Batted In
+                    <span class="badge badge-primary badge-pill" th:text="${careerHittingStats.getRbi()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Batting Average
+                    <span class="badge badge-primary badge-pill" th:text="${careerHittingStats.getAvg()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Slugging Percentage
+                    <span class="badge badge-primary badge-pill" th:text="${careerHittingStats.getSlg()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    On-base Plus Slugging
+                    <span class="badge badge-primary badge-pill" th:text="${careerHittingStats.getOps()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    On-base Percentage
+                    <span class="badge badge-primary badge-pill" th:text="${careerHittingStats.getObp()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Stolen Bases
+                    <span class="badge badge-primary badge-pill" th:text="${careerHittingStats.getSb()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Caught Stealing
+                    <span class="badge badge-primary badge-pill" th:text="${careerHittingStats.getCs()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Strikeouts
+                    <span class="badge badge-primary badge-pill" th:text="${careerHittingStats.getSo()}">1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Walks
+                    <span class="badge badge-primary badge-pill" th:text="${careerHittingStats.getBb()}">1</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
