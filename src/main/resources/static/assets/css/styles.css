@@ -3,6 +3,6 @@
   margin-bottom:10px; /*to have the space under the image*/
 }
 
-#main{
-  border-top: 1px dotted red;
+body {
+    background-color: whitesmoke;
 }

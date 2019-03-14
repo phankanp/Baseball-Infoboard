@@ -1,6 +1,10 @@
 package com.spring.mlbstats;
 
 import com.spring.mlbstats.model.DailySchedule;
+import com.spring.mlbstats.model.LeagueLeaders.HittingLeaders.LeaderHittingRow;
+import com.spring.mlbstats.model.LeagueLeaders.HittingLeaders.LeaderHittingWrapper;
+import com.spring.mlbstats.model.LeagueLeaders.PitchingLeaders.LeaderPitchingRow;
+import com.spring.mlbstats.model.LeagueLeaders.PitchingLeaders.LeaderPitchingWrapper;
 import com.spring.mlbstats.model.News;
 import com.spring.mlbstats.model.PlayerDetail.CareerHittingStats.CareerHittingStatsRow;
 import com.spring.mlbstats.model.PlayerDetail.CareerHittingStats.CareerHittingStatsWrapper;
@@ -12,7 +16,6 @@ import com.spring.mlbstats.model.PlayerDetail.ProjectedHittingStats.ProjectedHit
 import com.spring.mlbstats.model.PlayerDetail.ProjectedHittingStats.ProjectedHittingStatsWrapper;
 import com.spring.mlbstats.model.PlayerDetail.ProjectedPitchingStats.ProjectedPitchingStatsRow;
 import com.spring.mlbstats.model.PlayerDetail.ProjectedPitchingStats.ProjectedPitchingStatsWrapper;
-import com.spring.mlbstats.model.PlayerDetail.SeasonHittingStats.SeasonHittingStats;
 import com.spring.mlbstats.model.PlayerDetail.SeasonHittingStats.SeasonHittingStatsRow;
 import com.spring.mlbstats.model.PlayerDetail.SeasonHittingStats.SeasonHittingStatsWrapper;
 import com.spring.mlbstats.model.PlayerDetail.SeasonPitchingStats.SeasonPitchingStatsRow;
@@ -313,5 +316,35 @@ public class DashboardController {
         model.addAttribute("careerPitchingStats", careerPitchingStatsRow);
 
         return "pitcher_player_page";
+    }
+
+    @GetMapping("/leagueleaders/hitting/{stat}")
+    public ResponseEntity<?> leagueLeadersHitting(@PathVariable String stat) {
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String getStats = "http://lookup-service-prod.mlb.com/json/named.leader_hitting_repeater.bam?sport_code='mlb'&" +
+                "results=5&game_type='R'&season='2018'&sort_column=" + stat + "&leader_hitting_repeater.col_in=" + stat +
+                "&leader_hitting_repeater.col_in=name_display_first_last&leader_hitting_repeater.col_in=team_name&leader_hitting_repeater.col_in=player_id";
+
+        LeaderHittingWrapper leaderHittingWrapper = restTemplate.getForObject(getStats, LeaderHittingWrapper.class);
+
+        List<LeaderHittingRow> hittingLeaders = leaderHittingWrapper.getLeaderHittingRepeater().getLeaderHittingMux().getQueryResults().getRow();
+        return new ResponseEntity<>(hittingLeaders, HttpStatus.OK);
+    }
+
+    @GetMapping("/leagueleaders/pitching/{stat}")
+    public ResponseEntity<?> leagueLeadersPitching(@PathVariable String stat) {
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        String getStats = "http://lookup-service-prod.mlb.com/json/named.leader_pitching_repeater.bam?sport_code='mlb'" +
+                "&results=5&game_type='R'&season='2018'&sort_column=" + stat + "&leader_pitching_repeater.col_in=" + stat +
+                "&leader_pitching_repeater.col_in=name_display_first_last&leader_pitching_repeater.col_in=team_name&leader_pitching_repeater.col_in=player_id";
+
+        LeaderPitchingWrapper leaderPitchingWrapper = restTemplate.getForObject(getStats, LeaderPitchingWrapper.class);
+
+        List<LeaderPitchingRow> pitchingLeaders = leaderPitchingWrapper.getLeaderPitchingRepeater().getLeaderPitchingMux().getQueryResults().getRow();
+        return new ResponseEntity<>(pitchingLeaders, HttpStatus.OK);
     }
 }
