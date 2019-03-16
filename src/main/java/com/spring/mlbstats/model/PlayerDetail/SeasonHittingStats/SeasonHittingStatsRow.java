@@ -173,6 +173,7 @@ public class SeasonHittingStatsRow {
     private String r;
     @JsonProperty("ab")
     private String ab;
+    private int singles;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -708,6 +709,10 @@ public class SeasonHittingStatsRow {
 
     public int getSingles() {
         return Integer.parseInt(h) - Integer.parseInt(xbh);
+    }
+
+    public void setSingles(int singles) {
+        this.singles = singles;
     }
 
     @JsonAnyGetter

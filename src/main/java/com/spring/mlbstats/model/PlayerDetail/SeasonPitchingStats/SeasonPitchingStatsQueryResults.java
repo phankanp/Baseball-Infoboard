@@ -1,13 +1,10 @@
 package com.spring.mlbstats.model.PlayerDetail.SeasonPitchingStats;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import com.fasterxml.jackson.annotation.*;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -22,7 +19,8 @@ public class SeasonPitchingStatsQueryResults {
     @JsonProperty("totalSize")
     private String totalSize;
     @JsonProperty("row")
-    private SeasonPitchingStatsRow row;
+    @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+    private List<SeasonPitchingStatsRow> row;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -47,12 +45,12 @@ public class SeasonPitchingStatsQueryResults {
     }
 
     @JsonProperty("row")
-    public SeasonPitchingStatsRow getRow() {
+    public List<SeasonPitchingStatsRow> getRow() {
         return row;
     }
 
     @JsonProperty("row")
-    public void setRow(SeasonPitchingStatsRow row) {
+    public void setRow(List<SeasonPitchingStatsRow> row) {
         this.row = row;
     }
 

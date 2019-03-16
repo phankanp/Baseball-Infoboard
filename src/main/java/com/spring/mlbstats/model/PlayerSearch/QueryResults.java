@@ -1,4 +1,4 @@
-package com.spring.mlbstats.model.PlayerDetail.SeasonHittingStats;
+package com.spring.mlbstats.model.PlayerSearch;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.*;
         "totalSize",
         "row"
 })
-public class SeasonHittingStatsQueryResults {
+public class QueryResults  {
 
     @JsonProperty("created")
     private String created;
@@ -20,7 +20,7 @@ public class SeasonHittingStatsQueryResults {
     private String totalSize;
     @JsonProperty("row")
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-    private List<SeasonHittingStatsRow> row;
+    private List<Row> row = null;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -45,12 +45,12 @@ public class SeasonHittingStatsQueryResults {
     }
 
     @JsonProperty("row")
-    public List<SeasonHittingStatsRow> getRow() {
+    public List<Row> getRow() {
         return row;
     }
 
     @JsonProperty("row")
-    public void setRow(List<SeasonHittingStatsRow> row) {
+    public void setRow(List<Row> row) {
         this.row = row;
     }
 
@@ -63,5 +63,6 @@ public class SeasonHittingStatsQueryResults {
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
     }
+
 
 }

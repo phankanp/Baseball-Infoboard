@@ -8,7 +8,8 @@
           integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" th:href="@{/assets/css/styles.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/img}"/>
 
     <div th:object="${player}">
         <title th:text="${player.getNameFull()}">Document</title>
@@ -29,27 +30,11 @@
             <li class="nav-item active">
                 <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    Dropdown
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-            </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <form class="form-inline mt-2 mt-md-0" th:action="@{/playersearch}" method="get">
+            <input class="form-control mr-sm-2 input-medium  col-8" type="search" placeholder="Enter Player Name" aria-label="Search"
+                   name="search" id="search" th:value="${search}" pattern="\S+\s+\S+"
+                   oninvalid="this.setCustomValidity('Please enter a first and last name')" oninput="setCustomValidity('')">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
     </div>
@@ -57,17 +42,17 @@
 
 <div class="container" th:object="${player}" style="margin-top: 30px">
 
-    <div class="card d-flex align-items-center justify-content-center h-100" style="border: none;">
-        <a th:href="@{|/player/${player.getPlayerId()}|}"><img
+    <div class="card d-flex align-items-center justify-content-center h-100" style="border: none; background-color: transparent">
+        <a th:href="@{|/player/hitter/${player.getPlayerId()}|}"><img
                 th:src="@{'http://mlb.mlb.com/mlb/images/players/head_shot/' + ${player.getPlayerId()} + '.jpg'}" class="img-thumbnail" width="200"
                 height="100">
         </a>
         <div class="card-body">
-            <h1 class="card-title text-center" th:text="'#' + ${player.getJerseyNumber()} + ' - ' + ${player.getNameFull()} + ' - ' + ${player.getPrimaryPositionTxt()}">Card title</h1>
+            <h1 class="card-title text-center" th:text="'#' + ${player.getJerseyNumber()} + ' - ' + ${player.getNameDisplayFirstLast()} + ' - ' + ${player.getPrimaryPositionTxt()}">Card title</h1>
             <p class="card-text text-center" th:text="'Team: ' + ${player.getTeamName()}"></p>
             <p class="card-text text-center" th:text="'DOB: ' + ${player.getBirthDate().substring(5,7)} + '/' + ${player.getBirthDate().substring(8,10)} + '/' + ${player.getBirthDate().substring(0,4)} + ' - ' + 'Age: ' + ${player.getAge()}"></p>
             <p class="card-text text-center" th:text="'Height: ' + ${player.getHeightFeet()} + '\'' + ${player.getHeightInches()} + ' - ' + 'Throws: ' + ${player.getThrows()} + ' - ' + ' Bats: ' + ${player.getBats()}"></p>
-            <p class="card-text text-center" th:text="'Country: ' + ${player.getBirthCity()} + ', ' + ${player.getBirthCountry()}"></p>
+            <p class="card-text text-center" th:text="'City/Country: ' + ${player.getBirthCity()} + ', ' + ${player.getBirthCountry()}"></p>
             <p class="card-text text-center" th:if="${player.getCollege() == ''}" th:text="'College: None'"></p>
             <p class="card-text text-center" th:if="${player.getCollege() != ''}" th:text="'College: ' + ${player.getCollege()}"></p>
             <div class="col text-center">

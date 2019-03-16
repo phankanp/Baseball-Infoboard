@@ -143,6 +143,7 @@ public class CareerHittingStatsRow {
     private String roe;
     @JsonProperty("go")
     private String go;
+    private int singles;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -580,7 +581,9 @@ public class CareerHittingStatsRow {
         return Integer.parseInt(h) - Integer.parseInt(xbh);
     }
 
-
+    public void setSingles(int singles) {
+        this.singles = singles;
+    }
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
