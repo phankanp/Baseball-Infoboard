@@ -1,45 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="layout :: head"></head>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" th:href="@{/assets/css/styles.css}"/>
-    <link rel="stylesheet" th:href="@{/assets/img}"/>
-
     <div th:object="${player}">
         <title th:text="${player.getNameFull()}">Document</title>
     </div>
-
 </head>
 <body>
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-        </ul>
-        <form class="form-inline mt-2 mt-md-0" th:action="@{/playersearch}" method="get">
-            <input class="form-control mr-sm-2 input-medium  col-8" type="search" placeholder="Enter Player Name" aria-label="Search"
-                   name="search" id="search" th:value="${search}" pattern="\S+\s+\S+"
-                   oninvalid="this.setCustomValidity('Please enter a first and last name')" oninput="setCustomValidity('')">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-    </div>
-</nav>
-
+<nav th:replace="layout :: navbar"></nav>
 <div class="container" th:object="${player}" style="margin-top: 30px">
 
     <div class="card d-flex align-items-center justify-content-center h-100" style="border: none; background-color: transparent">
@@ -293,6 +262,7 @@
         </div>
     </div>
 </div>
+<footer th:replace="layout :: footer"></footer>
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

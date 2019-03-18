@@ -47,6 +47,15 @@ import java.util.List;
 @Controller
 public class DashboardController {
 
+    public HttpHeaders generateHeaders(){
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Ocp-Apim-Subscription-Key", "b3572283c9474a0386ead523d82c99f8");
+
+        return headers;
+    }
+
     @GetMapping("/")
     public String home() {
         return "index";
@@ -62,10 +71,7 @@ public class DashboardController {
 
         String url = "https://api.fantasydata.net/v3/mlb/scores/JSON/GamesByDate/" + dateFormat.format(date);
 
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Ocp-Apim-Subscription-Key", "b3572283c9474a0386ead523d82c99f8");
+        HttpHeaders headers = generateHeaders();
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
@@ -89,10 +95,7 @@ public class DashboardController {
 
         String url = "https://api.fantasydata.net/v3/mlb/scores/json/Stadiums";
 
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Ocp-Apim-Subscription-Key", "b3572283c9474a0386ead523d82c99f8");
+        HttpHeaders headers = generateHeaders();
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
@@ -116,10 +119,7 @@ public class DashboardController {
 
         String url = "https://api.fantasydata.net/v3/mlb/scores/JSON/Standings/2018";
 
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Ocp-Apim-Subscription-Key", "b3572283c9474a0386ead523d82c99f8");
+        HttpHeaders headers = generateHeaders();
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
@@ -143,10 +143,7 @@ public class DashboardController {
 
         String url = "https://api.fantasydata.net/v3/mlb/scores/JSON/News";
 
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Ocp-Apim-Subscription-Key", "b3572283c9474a0386ead523d82c99f8");
+        HttpHeaders headers = generateHeaders();
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
@@ -178,10 +175,7 @@ public class DashboardController {
 
         String getTeamStats = "https://api.fantasydata.net/v3/mlb/scores/JSON/TeamSeasonStats/2018";
 
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Ocp-Apim-Subscription-Key", "b3572283c9474a0386ead523d82c99f8");
+        HttpHeaders headers = generateHeaders();
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
