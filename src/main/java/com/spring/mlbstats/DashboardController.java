@@ -1,15 +1,14 @@
 package com.spring.mlbstats;
 
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
-import com.spring.mlbstats.model.DailySchedule;
+import com.spring.mlbstats.model.*;
+import com.spring.mlbstats.model.GameWeather.Weather;
+import com.spring.mlbstats.model.GameWeather.WeatherWrapper;
 import com.spring.mlbstats.model.LeagueLeaders.HittingLeaders.LeaderHittingRow;
 import com.spring.mlbstats.model.LeagueLeaders.HittingLeaders.LeaderHittingWrapper;
 import com.spring.mlbstats.model.LeagueLeaders.PitchingLeaders.LeaderPitchingRow;
 import com.spring.mlbstats.model.LeagueLeaders.PitchingLeaders.LeaderPitchingWrapper;
-import com.spring.mlbstats.model.News;
 import com.spring.mlbstats.model.PlayerDetail.CareerHittingStats.CareerHittingStatsRow;
 import com.spring.mlbstats.model.PlayerDetail.CareerHittingStats.CareerHittingStatsWrapper;
-import com.spring.mlbstats.model.PlayerDetail.CareerPitchingStats.CareerPitchingStats;
 import com.spring.mlbstats.model.PlayerDetail.CareerPitchingStats.CareerPitchingStatsRow;
 import com.spring.mlbstats.model.PlayerDetail.CareerPitchingStats.CareerPitchingStatsWrapper;
 import com.spring.mlbstats.model.PlayerDetail.PlayerRow;
@@ -23,10 +22,7 @@ import com.spring.mlbstats.model.PlayerDetail.SeasonHittingStats.SeasonHittingSt
 import com.spring.mlbstats.model.PlayerDetail.SeasonPitchingStats.SeasonPitchingStatsRow;
 import com.spring.mlbstats.model.PlayerDetail.SeasonPitchingStats.SeasonPitchingStatsWrapper;
 import com.spring.mlbstats.model.PlayerSearch.PlayerSearchWrapper;
-import com.spring.mlbstats.model.PlayerSearch.QueryResults;
 import com.spring.mlbstats.model.PlayerSearch.Row;
-import com.spring.mlbstats.model.Stadium;
-import com.spring.mlbstats.model.Standing;
 import com.spring.mlbstats.model.TeamDetail.*;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -38,10 +34,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.InputMismatchException;
 import java.util.List;
 
 @Controller
@@ -75,7 +71,6 @@ public class DashboardController {
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
-
         ResponseEntity<List<DailySchedule>> responseEntity = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
@@ -84,6 +79,24 @@ public class DashboardController {
         );
 
         List<DailySchedule> dailySchedule = responseEntity.getBody();
+
+        DateFormat timeDF = new SimpleDateFormat("HH:mm");
+        DateFormat outputTimeDF = new SimpleDateFormat("hh:mm");
+
+        Date time = null;
+
+        for (DailySchedule ds : dailySchedule) {
+            if (ds.getStatus().equals("InProgress")) {
+                ds.setStatus("In Progress");
+            }
+            try {
+                time = timeDF.parse(ds.getDateTime().substring(11, 16));
+                ds.setStartTime(outputTimeDF.format(time));
+            } catch(ParseException pe){
+                pe.printStackTrace();
+            }
+
+        }
 
         return new ResponseEntity<>(dailySchedule, HttpStatus.OK);
     }
@@ -164,6 +177,9 @@ public class DashboardController {
     public String teamDetails(@PathVariable String teamCode, @PathVariable Long teamId, Model model){
         RestTemplate restTemplate = new RestTemplate();
 
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+
         String getTeamUrl  = "http://lookup-service-prod.mlb.com/json/named.team_all_season.bam?sport_code=" +
                 "'mlb'&all_star_sw='N'&sort_order=name_asc&season='2018'";
 
@@ -210,8 +226,11 @@ public class DashboardController {
         int gameCount = 0;
 
         for (DailySchedule ds : scheduleResponseBody) {
+            System.out.println(ds.getDay().substring(0,10));
             if (gameCount >= 12) {
                 break;
+            } else if (ds.getDay().compareTo(dateFormat.format(date)) < 0) {
+                continue;
             } else if (teamCode.equals(ds.getAwayTeam()) || teamCode.equals(ds.getHomeTeam())) {
                 nextTwelveGames.add(ds);
                 gameCount++;
@@ -502,5 +521,18 @@ public class DashboardController {
         model.addAttribute("players", players);
 
         return "player_search_results";
+    }
+
+    @GetMapping("/weather/{zipCode}")
+    public ResponseEntity<?> getWeather(@PathVariable String zipCode) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        String getWeather = "http://api.openweathermap.org/data/2.5/weather?q=" + zipCode + "&APPID=" + "14a681295caa19ebfce76d979e0eaec7";
+
+        WeatherWrapper weatherWrapper = restTemplate.getForObject(getWeather, WeatherWrapper.class);
+
+        List<Weather> weather = weatherWrapper.getWeather();
+
+        return new ResponseEntity<>(weather.get(0), HttpStatus.OK);
     }
 }

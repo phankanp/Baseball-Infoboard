@@ -222,6 +222,8 @@ public class DailySchedule {
     @JsonProperty("GameEndDateTime")
     private String gameEndDateTime;
     private String stadiumName;
+
+    private String startTime;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -932,6 +934,14 @@ public class DailySchedule {
     public void setStadiumName(String stadiumName) {
         this.stadiumName = stadiumName;
     }
+    @JsonProperty("StartTime")
+    public String getStartTime() {
+        return startTime;
+    }
+    @JsonProperty("StartTime")
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
 
     @Override
     public String toString() {
@@ -1005,6 +1015,8 @@ public class DailySchedule {
                 ", isClosed=" + isClosed +
                 ", updated='" + updated + '\'' +
                 ", gameEndDateTime='" + gameEndDateTime + '\'' +
+                ", stadiumName='" + stadiumName + '\'' +
+                ", startTime='" + startTime + '\'' +
                 ", additionalProperties=" + additionalProperties +
                 '}';
     }

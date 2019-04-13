@@ -142,9 +142,7 @@ function hideSection() {
 
         $(this).addClass('active');
 
-        $.get("http://localhost:8080/stadiums", function (data) {
-            stadiums = data
-        })
+
 
         $.get("http://localhost:8080/dailyschedule", function (data) {
 
@@ -160,6 +158,11 @@ function hideSection() {
                 cardBody.append("<h5 class='card-title'>" + data[i].AwayTeam + ' at ' + data[i].HomeTeam + "</h5>")
 
                 let weatherUrl = ""
+                let weatherDetailsDiv = $('<div id="icon"></div>')
+
+                $.get("http://localhost:8080/stadiums", function (data) {
+                    stadiums = data
+                })
 
                 $.each(stadiums, function (e) {
                     if (data[i].StadiumID === stadiums[e].StadiumID) {
@@ -168,12 +171,23 @@ function hideSection() {
                     }
                 })
 
-
                 $.get(weatherUrl, function (data) {
-                    console.log(data)
+                    let iconurl = "http://openweathermap.org/img/w/" + data.icon + ".png"
+
+                    weatherDetailsDiv.append('<img id="wicon" src=' + iconurl + ' alt="Weather icon">')
+
+                    let weatherDescription = data.description
+                        .split(' ')
+                        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                        .join(' ')
+
+                    weatherDetailsDiv.append('<p>' + weatherDescription + '</p>')
+
                 })
 
-                cardBody.append("<p2 class='card-text'>" + "Start Time: " + data[i].DateTime.substring(11, 16) + "</p2>")
+                cardBody.append(weatherDetailsDiv)
+
+                cardBody.append("<p2 class='card-text'>" + "Start Time: " + data[i].StartTime + " EST" + "</p2>")
 
                 if (data[i].AwayTeamRuns === undefined) {
                     cardBody.append("<p class='card-text'>" + "Score: None" + "</p>")
@@ -426,7 +440,7 @@ $(".leagueLeaders").click(function (e) {
 
         const leagueLeadersHitting = $('<div id="leagueLeadersHitting"></div>');
 
-        const leagueHrLeaders = generateLeagueLeadersTable("bg-danger", "Home Run Leaders m", "HR")
+        const leagueHrLeaders = generateLeagueLeadersTable("bg-danger", "Home Run Leaders", "HR")
 
         leagueHrLeaders.append(generateLeagueLeadersTableBody(0, 5, "hr", data))
 
@@ -540,11 +554,13 @@ $(".leagueLeaders").click(function (e) {
     })
 
     $('.wins').click(function (e) {
+        e.preventDefault();
 
+        $(".loading-sub").show()
         $.get("http://localhost:8080/leagueleaders/pitching/w", function (data) {
             $("#leagueLeadersPitching").remove()
-
-            $(".loading-sub").show()
+            //
+            // $(".loading-sub").show()
 
             const leagueLeadersPitching = $('<div id="leagueLeadersPitching"></div>');
 
@@ -562,11 +578,10 @@ $(".leagueLeaders").click(function (e) {
     })
 
     $('.strikeouts').click(function (e) {
+        $(".loading-sub").show()
 
         $.get("http://localhost:8080/leagueleaders/pitching/so", function (data) {
             $("#leagueLeadersPitching").remove()
-
-            $(".loading-sub").show()
 
             const leagueLeadersPitching = $('<div id="leagueLeadersPitching"></div>');
 
@@ -584,7 +599,7 @@ $(".leagueLeaders").click(function (e) {
     })
 
     $('.era').click(function (e) {
-
+        $(".loading-sub").show()
         $.get("http://localhost:8080/leagueleaders/pitching/era", function (data) {
             $("#leagueLeadersPitching").remove()
 
@@ -606,11 +621,12 @@ $(".leagueLeaders").click(function (e) {
     })
 
     $('.saves').click(function (e) {
-
+        $(".loading-sub").show()
         $.get("http://localhost:8080/leagueleaders/pitching/sv", function (data) {
+            $(".loading-sub").show()
             $("#leagueLeadersPitching").remove()
 
-            $(".loading-sub").show()
+
 
             const leagueLeadersPitching = $('<div id="leagueLeadersPitching"></div>');
 
