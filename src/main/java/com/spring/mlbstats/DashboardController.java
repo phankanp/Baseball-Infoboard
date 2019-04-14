@@ -24,14 +24,19 @@ import com.spring.mlbstats.model.PlayerDetail.SeasonPitchingStats.SeasonPitching
 import com.spring.mlbstats.model.PlayerSearch.PlayerSearchWrapper;
 import com.spring.mlbstats.model.PlayerSearch.Row;
 import com.spring.mlbstats.model.TeamDetail.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -41,13 +46,17 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
+@PropertySource("classpath:project.properties")
 public class DashboardController {
+
+    @Autowired
+    private Environment env;
 
     public HttpHeaders generateHeaders(){
         HttpHeaders headers = new HttpHeaders();
-
+        String apiKey = env.getProperty("sports.api.key");
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Ocp-Apim-Subscription-Key", "b3572283c9474a0386ead523d82c99f8");
+        headers.set("Ocp-Apim-Subscription-Key", apiKey);
 
         return headers;
     }
@@ -66,6 +75,7 @@ public class DashboardController {
         Date date = new Date();
 
         String url = "https://api.fantasydata.net/v3/mlb/scores/JSON/GamesByDate/" + dateFormat.format(date);
+        String Stadiumurl = "https://api.fantasydata.net/v3/mlb/scores/json/Stadiums";
 
         HttpHeaders headers = generateHeaders();
 
@@ -95,7 +105,24 @@ public class DashboardController {
             } catch(ParseException pe){
                 pe.printStackTrace();
             }
+        }
 
+        ResponseEntity<List<Stadium>> responseEntityStadiumList = restTemplate.exchange(
+                Stadiumurl,
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<List<Stadium>>(){}
+        );
+
+        List<Stadium> stadiums = responseEntityStadiumList.getBody();
+
+        for (DailySchedule ds : dailySchedule) {
+            for (Stadium stadium : stadiums) {
+                if (ds.getStadiumID() == stadium.getStadiumID()) {
+                    ds.setStadiumName(stadium.getName());
+                    ds.setStadiumCity(stadium.getCity());
+                }
+            }
         }
 
         return new ResponseEntity<>(dailySchedule, HttpStatus.OK);
@@ -111,7 +138,6 @@ public class DashboardController {
         HttpHeaders headers = generateHeaders();
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
-
 
         ResponseEntity<List<Stadium>> responseEntity = restTemplate.exchange(
                 url,
@@ -130,12 +156,11 @@ public class DashboardController {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        String url = "https://api.fantasydata.net/v3/mlb/scores/JSON/Standings/2018";
+        String url = "https://api.fantasydata.net/v3/mlb/scores/JSON/Standings/2019";
 
         HttpHeaders headers = generateHeaders();
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
-
 
         ResponseEntity<List<Standing>> responseEntity = restTemplate.exchange(
                 url,
@@ -160,7 +185,6 @@ public class DashboardController {
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
-
         ResponseEntity<List<News>> responseEntity = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
@@ -181,7 +205,7 @@ public class DashboardController {
         Date date = new Date();
 
         String getTeamUrl  = "http://lookup-service-prod.mlb.com/json/named.team_all_season.bam?sport_code=" +
-                "'mlb'&all_star_sw='N'&sort_order=name_asc&season='2018'";
+                "'mlb'&all_star_sw='N'&sort_order=name_asc&season='2019'";
 
         String getRosterUrl = "http://lookup-service-prod.mlb.com/json/named.roster_40.bam?team_id=" + teamId;
 
@@ -203,6 +227,8 @@ public class DashboardController {
         for (TeamRow tr : teamBodyWrapper.getTeamAllSeason().getQueryResults().getRow()) {
             if (tr.getMlbOrgId().equals(teamId.toString())) {
                teamRow = tr;
+//               tr.setMlbOrgAbbrev(teamCode);
+//                System.out.println(tr.getMlbOrgAbbrev());
             }
         }
 
@@ -225,13 +251,23 @@ public class DashboardController {
 
         int gameCount = 0;
 
+        DateFormat timeDF = new SimpleDateFormat("HH:mm");
+        DateFormat outputTimeDF = new SimpleDateFormat("hh:mm");
+
+        Date time = null;
+
         for (DailySchedule ds : scheduleResponseBody) {
-            System.out.println(ds.getDay().substring(0,10));
             if (gameCount >= 12) {
                 break;
             } else if (ds.getDay().compareTo(dateFormat.format(date)) < 0) {
                 continue;
             } else if (teamCode.equals(ds.getAwayTeam()) || teamCode.equals(ds.getHomeTeam())) {
+                try {
+                    time = timeDF.parse(ds.getDateTime().substring(11, 16));
+                    ds.setStartTime(outputTimeDF.format(time));
+                } catch(ParseException pe){
+                    pe.printStackTrace();
+                }
                 nextTwelveGames.add(ds);
                 gameCount++;
             }
@@ -483,7 +519,7 @@ public class DashboardController {
         RestTemplate restTemplate = new RestTemplate();
 
         String getStats = "http://lookup-service-prod.mlb.com/json/named.leader_hitting_repeater.bam?sport_code='mlb'&" +
-                "results=5&game_type='R'&season='2018'&sort_column=" + stat + "&leader_hitting_repeater.col_in=" + stat +
+                "results=5&game_type='R'&season='2019'&sort_column=" + stat + "&leader_hitting_repeater.col_in=" + stat +
                 "&leader_hitting_repeater.col_in=name_display_first_last&leader_hitting_repeater.col_in=team_name&leader_hitting_repeater.col_in=player_id";
 
         LeaderHittingWrapper leaderHittingWrapper = restTemplate.getForObject(getStats, LeaderHittingWrapper.class);
@@ -498,7 +534,7 @@ public class DashboardController {
         RestTemplate restTemplate = new RestTemplate();
 
         String getStats = "http://lookup-service-prod.mlb.com/json/named.leader_pitching_repeater.bam?sport_code='mlb'" +
-                "&results=5&game_type='R'&season='2018'&sort_column=" + stat + "&leader_pitching_repeater.col_in=" + stat +
+                "&results=5&game_type='R'&season='2019'&sort_column=" + stat + "&leader_pitching_repeater.col_in=" + stat +
                 "&leader_pitching_repeater.col_in=name_display_first_last&leader_pitching_repeater.col_in=team_name&leader_pitching_repeater.col_in=player_id";
 
         LeaderPitchingWrapper leaderPitchingWrapper = restTemplate.getForObject(getStats, LeaderPitchingWrapper.class);
@@ -527,12 +563,18 @@ public class DashboardController {
     public ResponseEntity<?> getWeather(@PathVariable String zipCode) {
         RestTemplate restTemplate = new RestTemplate();
 
-        String getWeather = "http://api.openweathermap.org/data/2.5/weather?q=" + zipCode + "&APPID=" + "14a681295caa19ebfce76d979e0eaec7";
+        String getWeather = "http://api.openweathermap.org/data/2.5/weather?q=" + zipCode + "&APPID=" + env.getProperty("weather.api.key");
 
         WeatherWrapper weatherWrapper = restTemplate.getForObject(getWeather, WeatherWrapper.class);
 
         List<Weather> weather = weatherWrapper.getWeather();
 
         return new ResponseEntity<>(weather.get(0), HttpStatus.OK);
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public String handle(Exception ex) {
+
+        return "error";//this is view name
     }
 }

@@ -222,8 +222,9 @@ public class DailySchedule {
     @JsonProperty("GameEndDateTime")
     private String gameEndDateTime;
     private String stadiumName;
-
     private String startTime;
+    private String stadiumCity;
+
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -927,20 +928,34 @@ public class DailySchedule {
         this.additionalProperties.put(name, value);
     }
 
+    @JsonProperty("StadiumName")
     public String getStadiumName() {
         return stadiumName;
     }
 
+    @JsonProperty("StadiumName")
     public void setStadiumName(String stadiumName) {
         this.stadiumName = stadiumName;
     }
+
     @JsonProperty("StartTime")
     public String getStartTime() {
         return startTime;
     }
+
     @JsonProperty("StartTime")
     public void setStartTime(String startTime) {
         this.startTime = startTime;
+    }
+
+    @JsonProperty("StadiumCity")
+    public String getStadiumCity() {
+        return stadiumCity;
+    }
+
+    @JsonProperty("StadiumCity")
+    public void setStadiumCity(String stadiumCity) {
+        this.stadiumCity = stadiumCity;
     }
 
     @Override
@@ -1017,6 +1032,7 @@ public class DailySchedule {
                 ", gameEndDateTime='" + gameEndDateTime + '\'' +
                 ", stadiumName='" + stadiumName + '\'' +
                 ", startTime='" + startTime + '\'' +
+                ", stadiumCity='" + stadiumCity + '\'' +
                 ", additionalProperties=" + additionalProperties +
                 '}';
     }
