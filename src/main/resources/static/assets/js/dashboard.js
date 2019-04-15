@@ -48,6 +48,8 @@ function hideSection() {
         $(this).addClass('active');
 
         $('#upcomingSchedule').fadeIn('slow');
+
+        return false;
     })
     /**********************************************************************************************************************/
     $(".roster").click(function () {
