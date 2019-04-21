@@ -406,12 +406,6 @@ function generateLeagueLeadersTableBody(i, indexTerminate, stat, data) {
 
 }
 /**********************************************************************************************************************/
-function leagueLeadersFadeout(id) {
-    $('#'+id).fadeOut(400, function () {
-        $('#'+id).remove()
-    })
-}
-/**********************************************************************************************************************/
 
 $(".leagueLeaders").click(function (e) {
     hideSection();
@@ -428,213 +422,69 @@ $(".leagueLeaders").click(function (e) {
 
     $(".loading-main").show()
 
-    $.get("http://localhost:8080/leagueleaders/hitting/hr", function (data) {
-
-        const leagueLeadersHitting = $('<div id="leagueLeadersHitting"></div>');
-
-        const leagueHrLeaders = generateLeagueLeadersTable("bg-danger", "Home Run Leaders", "HR")
-
-        leagueHrLeaders.append(generateLeagueLeadersTableBody(0, 5, "hr", data))
-
-        leagueLeadersHitting.append(leagueHrLeaders)
-
-        $(".loading-main").hide()
-
-        $(".main").append(leagueLeadersHitting)
-
-    })
+    generateHittingStatsTable("http://localhost:8080/leagueleaders/hitting/hr", "Home Run Leaders", "HR", "hr")
 
     $('.hr').click(function (e) {
 
         $(".loading-main").show()
 
-        $.get("http://localhost:8080/leagueleaders/hitting/hr", function (data) {
-            $('#leagueLeadersHitting').remove();
-
-            const leagueLeadersHitting = $('<div id="leagueLeadersHitting"></div>');
-
-            const leagueHrLeaders = generateLeagueLeadersTable("bg-danger", "Home Run Leaders", "HR")
-
-            leagueHrLeaders.append(generateLeagueLeadersTableBody(0, 5, "hr", data))
-
-            leagueLeadersHitting.append(leagueHrLeaders)
-
-            $(".loading-main").hide()
-
-            $(".main").append(leagueLeadersHitting)
-        })
+        generateHittingStatsTable("http://localhost:8080/leagueleaders/hitting/hr", "Home Run Leaders", "HR", "hr")
     })
 
     $('.hits').click(function (e) {
 
         $(".loading-main").show()
 
-        $.get("http://localhost:8080/leagueleaders/hitting/h", function (data) {
-            $('#leagueLeadersHitting').remove();
-
-            const leagueLeadersHitting = $('<div id="leagueLeadersHitting"></div>');
-
-            const leagueHrLeaders = generateLeagueLeadersTable("bg-danger", "Hit Leaders", "Hits")
-
-            leagueHrLeaders.append(generateLeagueLeadersTableBody(0, 5, "h", data))
-
-            leagueLeadersHitting.append(leagueHrLeaders)
-
-            $(".loading-main").hide()
-
-            $(".main").append(leagueLeadersHitting)
-
-
-        })
+        generateHittingStatsTable("http://localhost:8080/leagueleaders/hitting/h", "Hits Leaders", "Hits", "h")
     })
 
     $('.rbi').click(function (e) {
 
         $(".loading-main").show()
 
-        $.get("http://localhost:8080/leagueleaders/hitting/rbi", function (data) {
-            $('#leagueLeadersHitting').remove();
-
-            const leagueLeadersHitting = $('<div id="leagueLeadersHitting"></div>');
-
-            const leagueHrLeaders = generateLeagueLeadersTable("bg-danger", "RBI Leaders", "RBI")
-
-            leagueHrLeaders.append(generateLeagueLeadersTableBody(0, 5, "rbi", data))
-
-            leagueLeadersHitting.append(leagueHrLeaders)
-
-            $(".loading-main").hide()
-
-            $(".main").append(leagueLeadersHitting)
-        })
+        generateHittingStatsTable("http://localhost:8080/leagueleaders/hitting/rbi", "RBI Leaders", "RBI", "rbi")
     })
 
     $('.avg').click(function (e) {
 
         $(".loading-main").show()
 
-        $.get("http://localhost:8080/leagueleaders/hitting/avg", function (data) {
-            $('#leagueLeadersHitting').remove();
-
-            const leagueLeadersHitting = $('<div id="leagueLeadersHitting"></div>');
-
-            const leagueHrLeaders = generateLeagueLeadersTable("bg-danger", "Batting Average Leaders", "AVG")
-
-            leagueHrLeaders.append(generateLeagueLeadersTableBody(0, 5, "avg", data))
-
-            leagueLeadersHitting.append(leagueHrLeaders)
-
-            $(".loading-main").hide()
-
-            $(".main").append(leagueLeadersHitting)
-        })
+        generateHittingStatsTable("http://localhost:8080/leagueleaders/hitting/avg", "Batting Average Leaders", "AVG", "avg")
     })
 
     $('.pitcher').show();
 
     $(".loading-sub").show()
 
-    $.get("http://localhost:8080/leagueleaders/pitching/w", function (data) {
-        const leagueLeadersPitching = $('<div id="leagueLeadersPitching"></div>');
+    generatePitchingStatsTable("http://localhost:8080/leagueleaders/pitching/w", "Win Leaders", "Wins", "w")
 
-        const pitchingLeaders = generateLeagueLeadersTable("bg-primary", "Win Leaders", "Wins")
-
-        pitchingLeaders.append(generateLeagueLeadersTableBody(0, 5, "w", data))
-
-        leagueLeadersPitching.append(pitchingLeaders)
-
-        $(".loading-sub").hide()
-
-        $(".sub").append(leagueLeadersPitching)
-
-    })
 
     $('.wins').click(function (e) {
 
         $(".loading-sub").show()
 
-        $.get("http://localhost:8080/leagueleaders/pitching/w", function (data) {
-            $("#leagueLeadersPitching").remove()
-
-            const leagueLeadersPitching = $('<div id="leagueLeadersPitching"></div>');
-
-            const pitchingLeaders = generateLeagueLeadersTable("bg-primary", "Win Leaders", "Wins")
-
-            pitchingLeaders.append(generateLeagueLeadersTableBody(0, 5, "w", data))
-
-            leagueLeadersPitching.append(pitchingLeaders)
-
-            $(".loading-sub").hide()
-
-            $(".sub").append(leagueLeadersPitching)
-
-        })
+        generatePitchingStatsTable("http://localhost:8080/leagueleaders/pitching/w", "Win Leaders", "Wins", "w")
     })
 
     $('.strikeouts').click(function (e) {
 
         $(".loading-sub").show()
 
-        $.get("http://localhost:8080/leagueleaders/pitching/so", function (data) {
-            $("#leagueLeadersPitching").remove()
-
-            const leagueLeadersPitching = $('<div id="leagueLeadersPitching"></div>');
-
-            const pitchingLeaders = generateLeagueLeadersTable("bg-primary", "Strikeout Leaders", "Strikeouts")
-
-            pitchingLeaders.append(generateLeagueLeadersTableBody(0, 5, "so", data))
-
-            leagueLeadersPitching.append(pitchingLeaders)
-
-            $(".loading-sub").hide()
-
-            $(".sub").append(leagueLeadersPitching)
-
-        })
+        generatePitchingStatsTable("http://localhost:8080/leagueleaders/pitching/so", "Strikeout Leaders", "Strikeouts", "so")
     })
 
     $('.era').click(function (e) {
 
         $(".loading-sub").show()
 
-        $.get("http://localhost:8080/leagueleaders/pitching/era", function (data) {
-            $("#leagueLeadersPitching").remove()
-
-            const leagueLeadersPitching = $('<div id="leagueLeadersPitching"></div>');
-
-            const pitchingLeaders = generateLeagueLeadersTable("bg-primary", "ERA Leaders", "ERA")
-
-            pitchingLeaders.append(generateLeagueLeadersTableBody(0, 5, "era", data))
-
-            leagueLeadersPitching.append(pitchingLeaders)
-
-            $(".loading-sub").hide()
-
-            $(".sub").append(leagueLeadersPitching)
-
-        })
+        generatePitchingStatsTable("http://localhost:8080/leagueleaders/pitching/era", "ERA Leaders", "ERA", "era")
     })
 
     $('.saves').click(function (e) {
 
         $(".loading-sub").show()
 
-        $.get("http://localhost:8080/leagueleaders/pitching/sv", function (data) {
-
-            $("#leagueLeadersPitching").remove()
-
-            const leagueLeadersPitching = $('<div id="leagueLeadersPitching"></div>');
-
-            const pitchingLeaders = generateLeagueLeadersTable("bg-primary", "Save Leaders", "Saves")
-
-            pitchingLeaders.append(generateLeagueLeadersTableBody(0, 5, "sv", data))
-
-            leagueLeadersPitching.append(pitchingLeaders)
-
-            $(".loading-sub").hide()
-
-            $(".sub").append(leagueLeadersPitching)
-        })
+        generatePitchingStatsTable("http://localhost:8080/leagueleaders/pitching/sv", "Save Leaders", "Saves", "sv")
     })
 })
 /**********************************************************************************************************************/
@@ -648,3 +498,41 @@ $('.team-logo').click(function (e) {
     $(".main").remove()
     $(".reload-teamPage").show()
 })
+/**********************************************************************************************************************/
+function generatePitchingStatsTable(url, tableName, stat, statAbbreviation) {
+    $.get(url, function (data) {
+
+        $("#leagueLeadersPitching").remove()
+
+        const leagueLeadersPitching = $('<div id="leagueLeadersPitching"></div>');
+
+        const pitchingLeaders = generateLeagueLeadersTable("bg-primary", tableName, stat)
+
+        pitchingLeaders.append(generateLeagueLeadersTableBody(0, 5, statAbbreviation, data))
+
+        leagueLeadersPitching.append(pitchingLeaders)
+
+        $(".loading-sub").hide()
+
+        $(".sub").append(leagueLeadersPitching)
+    })
+}
+/**********************************************************************************************************************/
+function generateHittingStatsTable(url, tableName, stat, statAbbreviation) {
+    $.get(url, function (data) {
+
+        $('#leagueLeadersHitting').remove();
+
+        const leagueLeadersHitting = $('<div id="leagueLeadersHitting"></div>');
+
+        const leagueHrLeaders = generateLeagueLeadersTable("bg-danger", tableName, stat)
+
+        leagueHrLeaders.append(generateLeagueLeadersTableBody(0, 5, statAbbreviation, data))
+
+        leagueLeadersHitting.append(leagueHrLeaders)
+
+        $(".loading-main").hide()
+
+        $(".main").append(leagueLeadersHitting)
+    })
+}
