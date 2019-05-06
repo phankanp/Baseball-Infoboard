@@ -6,6 +6,7 @@ This is an app for displaying information related to Major League Baseball. The 
 
 ### Tech Stack
 
+- Java
 - Spring Boot 2
   - Spring Data JPA
   - Spring Web
