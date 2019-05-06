@@ -2,7 +2,7 @@
 
 This is an app for displaying information related to Major League Baseball. The app interfaces with multiple sports API to gather and model data to POJOs'. The app displays league wide information including teams, daily game schedules, daily scores, daily weather information, standings, league news, and league pitching/hitting leaders. The app also displays individual team information, upcoming schedule, rosters, and stats. The app also provides individual player information, projected stats, current season stats, and career stats. The app also has a search feature to search for any player.  
 
-[Live!](https://baseball-information-dashboard.herokuapp.com/)
+### [Live!](https://baseball-information-dashboard.herokuapp.com/)
 
 ### Tech Stack
 
