@@ -16,3 +16,11 @@ This is an app for displaying information related to Major League Baseball. The 
   - Jackson Databind
 - Javascript (jQuery)
 - Boostrap 4
+
+### API Used
+
+- [SportsDataIO](https://sportsdata.io/mlb-api)
+
+- [MLB Data](https://appac.github.io/mlb-data-api-docs/)
+
+- [OpenWeatherMap](https://openweathermap.org/)
